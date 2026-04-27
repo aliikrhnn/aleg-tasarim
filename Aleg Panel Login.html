@@ -1,0 +1,1074 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aleg — İşletme Paneli Girişi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* WARM (default) */
+    --paper:   #F4EEE2;
+    --paper-2: #EDE4D3;
+    --ink:     #2A1F18;
+    --ink-2:   #5A4A3D;
+    --ink-3:   #8C7A69;
+    --accent:  #C4553A;
+    --accent-ink: #FAF5EA;
+    --line:    #D6C9B2;
+    --card:    #FAF5EA;
+    --success: #4E6B3E;
+    --danger:  #9A2E23;
+    --warning: #A86A1B;
+
+    --r-sm: 4px;
+    --r-md: 6px;
+    --r-lg: 10px;
+
+    --shadow-soft:
+      0 1px 0 rgba(42,31,24,0.04),
+      0 12px 32px -18px rgba(42,31,24,0.18),
+      0 2px 6px -3px rgba(42,31,24,0.12);
+
+    --shadow-raise:
+      0 1px 0 rgba(42,31,24,0.05),
+      0 24px 48px -22px rgba(42,31,24,0.28),
+      0 4px 10px -4px rgba(42,31,24,0.16);
+
+    --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    --font-body:    "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    --font-serif:   "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    --font-mono:    "Bricolage Grotesque", ui-monospace, Menlo, monospace;
+  }
+
+  /* ESPRESSO */
+  html[data-theme="espresso"] {
+    --paper:   #1E1510;
+    --paper-2: #261B14;
+    --ink:     #F2E6D2;
+    --ink-2:   #C9B79B;
+    --ink-3:   #8C7A69;
+    --accent:  #E07A5F;
+    --accent-ink: #1E1510;
+    --line:    #3B2C22;
+    --card:    #241A13;
+    --success: #A7C487;
+    --danger:  #E98278;
+    --warning: #E5B875;
+    --shadow-soft:
+      0 1px 0 rgba(0,0,0,0.3),
+      0 16px 40px -18px rgba(0,0,0,0.6),
+      0 2px 6px -3px rgba(0,0,0,0.4);
+    --shadow-raise:
+      0 1px 0 rgba(0,0,0,0.3),
+      0 28px 56px -22px rgba(0,0,0,0.7),
+      0 4px 10px -4px rgba(0,0,0,0.5);
+  }
+
+  /* SWISS — light, tighter, neutral, mono-forward */
+  html[data-theme="swiss"] {
+    --paper:   #F2F2F1;
+    --paper-2: #E8E8E7;
+    --ink:     #111111;
+    --ink-2:   #3A3A3A;
+    --ink-3:   #7A7A7A;
+    --accent:  #D0352A;
+    --accent-ink: #F2F2F1;
+    --line:    #D4D4D3;
+    --card:    #FFFFFF;
+    --success: #2B6A3F;
+    --danger:  #B1261B;
+    --warning: #9A6B10;
+    --r-sm: 2px;
+    --r-md: 4px;
+    --r-lg: 6px;
+    --shadow-soft: 0 1px 0 rgba(0,0,0,0.06);
+    --shadow-raise: 0 1px 0 rgba(0,0,0,0.06), 0 12px 28px -18px rgba(0,0,0,0.2);
+  }
+
+  /* EDITORIAL — creamy, serif-forward, greenish accent */
+  html[data-theme="editorial"] {
+    --paper:   #EFEAD9;
+    --paper-2: #E4DDC6;
+    --ink:     #1C2A1F;
+    --ink-2:   #455049;
+    --ink-3:   #7C8479;
+    --accent:  #365F3E;
+    --accent-ink: #F4F1E3;
+    --line:    #CFC7AE;
+    --card:    #F7F2DE;
+    --r-sm: 10px;
+    --r-md: 18px;
+    --r-lg: 28px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+    font-synthesis: style weight;
+    overflow-x: hidden;
+  }
+
+  /* Bricolage has no native italic — synthesize one for em/i/.serif */
+  em, i, .serif {
+    font-style: oblique 8deg;
+    font-family: var(--font-body);
+  }
+
+  /* Paper texture via radial gradients + subtle noise */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(1200px 800px at 10% 0%,   color-mix(in oklab, var(--paper-2), transparent 35%), transparent 60%),
+      radial-gradient(900px 600px  at 90% 100%, color-mix(in oklab, var(--paper-2), transparent 45%), transparent 55%),
+      radial-gradient(600px 400px  at 50% 40%,  color-mix(in oklab, var(--paper), transparent 85%), transparent 65%);
+    z-index: 0;
+  }
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    opacity: .35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.12  0 0 0 0 0.09  0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    z-index: 0;
+  }
+  html[data-theme="espresso"] body::after { opacity: .5; }
+  html[data-theme="swiss"] body::after { opacity: .18; }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  @media (max-width: 960px) {
+    .page { grid-template-columns: 1fr; }
+  }
+
+  /* ======= LEFT: BRAND PANEL ======= */
+  .left {
+    position: relative;
+    padding: 40px 56px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    border-right: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, transparent 0%, color-mix(in oklab, var(--paper-2), transparent 50%) 100%);
+  }
+  @media (max-width: 960px) {
+    .left { padding: 28px 24px 20px; min-height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .mono-a {
+    width: 36px; height: 36px;
+    border-radius: var(--r-sm);
+    background: var(--ink);
+    color: var(--paper);
+    display: grid; place-items: center;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1;
+    padding-top: 2px;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+  }
+  .mono-a::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border: 1px solid color-mix(in oklab, var(--paper), transparent 75%);
+    border-radius: calc(var(--r-sm) - 2px);
+    pointer-events: none;
+  }
+  .brand-text { line-height: 1; }
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.035em;
+    text-transform: lowercase;
+  }
+  .brand-loc {
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .brand-loc::before {
+    content: "";
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 80%);
+  }
+
+  .hero {
+    max-width: 620px;
+    padding: 48px 0 32px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 28px;
+  }
+  .eyebrow .rule {
+    width: 28px; height: 1px; background: var(--line);
+  }
+  .headline {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(46px, 6.2vw, 84px);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+    margin: 0;
+    text-transform: none;
+  }
+  .headline em {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent);
+    letter-spacing: -0.015em;
+  }
+  .headline .wrap {
+    display: inline-block;
+  }
+  .subhead {
+    margin-top: 22px;
+    max-width: 48ch;
+    font-size: 16.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  /* Live stats widget */
+  .stats {
+    margin-top: 36px;
+    display: inline-flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 2px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    position: relative;
+  }
+  .stats .pulse {
+    position: absolute;
+    top: 10px; left: 10px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--success), transparent 75%);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+  .stat {
+    padding: 14px 22px 12px 26px;
+    min-width: 170px;
+    position: relative;
+    transition: background .3s;
+  }
+  .stat + .stat {
+    border-left: 1px dashed var(--line);
+  }
+  .stat .k {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .stat .v {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.04em;
+    margin-top: 4px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    transition: opacity .45s cubic-bezier(.2,.6,.2,1), transform .45s cubic-bezier(.2,.6,.2,1);
+  }
+  .stat .v.fading { opacity: 0; transform: translateY(-6px); }
+
+  .left-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .foot-group { display: inline-flex; align-items: center; gap: 18px; }
+  .lang {
+    display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--card);
+  }
+  .lang button {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: transparent; border: 0; cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 999px;
+    color: var(--ink-3);
+    transition: all .2s;
+  }
+  .lang button[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .foot-link {
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--ink-3);
+    padding-bottom: 1px;
+    transition: color .2s, border-color .2s;
+  }
+  .foot-link:hover { color: var(--accent); border-color: var(--accent); }
+  .version { opacity: 0.6; }
+
+  /* ======= RIGHT: FORM ======= */
+  .right {
+    position: relative;
+    padding: 40px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: color-mix(in oklab, var(--paper), white 4%);
+  }
+  html[data-theme="espresso"] .right { background: color-mix(in oklab, var(--paper), black 8%); }
+  @media (max-width: 960px) {
+    .right { padding: 28px 24px 56px; min-height: auto; }
+  }
+
+  /* theme toggle */
+  .theme-toggle {
+    position: absolute;
+    top: 28px; right: 28px;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 7px 10px 7px 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+    z-index: 5;
+  }
+  .theme-toggle .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .theme-dots { display: inline-flex; gap: 6px; }
+  .theme-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    transition: transform .15s;
+  }
+  .theme-dot:hover { transform: scale(1.1); }
+  .theme-dot[aria-pressed="true"]::after {
+    content: "";
+    position: absolute; inset: -4px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+  }
+  .theme-dot.warm     { background: linear-gradient(135deg, #F4EEE2 50%, #C4553A 50%); }
+  .theme-dot.espresso { background: linear-gradient(135deg, #1E1510 50%, #E07A5F 50%); }
+  .theme-dot.swiss    { background: linear-gradient(135deg, #F2F2F1 50%, #D0352A 50%); }
+  .theme-dot.editorial{ background: linear-gradient(135deg, #EFEAD9 50%, #365F3E 50%); }
+
+  .form-wrap {
+    width: 100%;
+    max-width: 460px;
+  }
+  .form-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .form-eyebrow .tick {
+    width: 6px; height: 6px; background: var(--accent); border-radius: 1px;
+    transform: rotate(45deg);
+  }
+  .form-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(42px, 4.8vw, 60px);
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+    margin: 18px 0 10px;
+  }
+  .form-title em { font-family: var(--font-serif); font-weight: 400; font-style: italic; color: var(--accent); letter-spacing: -0.015em; }
+  .form-sub {
+    color: var(--ink-2);
+    font-size: 15px;
+    margin: 0 0 32px;
+    max-width: 40ch;
+  }
+
+  /* Invite banner (hidden by default) */
+  .invite {
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    background: color-mix(in oklab, var(--accent), var(--paper) 82%);
+    border: 1px solid color-mix(in oklab, var(--accent), transparent 60%);
+    border-radius: var(--r-md);
+    color: var(--ink);
+  }
+  body[data-state="invite"] .invite { display: flex; }
+  body[data-state="invite"] .form-title-main { display: none; }
+  body[data-state="invite"] .form-title-invite { display: inline; }
+  .form-title-invite { display: none; }
+  .invite .dot {
+    margin-top: 6px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); flex: none;
+  }
+  .invite .t {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .invite .m {
+    margin-top: 2px;
+    font-size: 13.5px; color: var(--ink-2);
+  }
+  .invite .m b { color: var(--ink); font-weight: 600; }
+
+  /* Inactive (subscription ended) banner */
+  .inactive {
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    background: color-mix(in oklab, var(--warning), var(--paper) 84%);
+    border: 1px solid color-mix(in oklab, var(--warning), transparent 55%);
+    border-radius: var(--r-md);
+  }
+  body[data-state="inactive"] .inactive { display: flex; }
+  .inactive .t {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--warning);
+    font-weight: 700;
+  }
+  .inactive .m { margin-top: 2px; font-size: 13.5px; color: var(--ink-2); }
+  .inactive .m a { color: var(--ink); text-decoration: underline; }
+  .inactive .dot {
+    margin-top: 6px; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--warning); flex: none;
+  }
+
+  /* Fields */
+  form { display: flex; flex-direction: column; gap: 18px; }
+  .field { display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .field label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .field .hint {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-3);
+  }
+  .field .hint a { color: var(--ink-2); text-decoration: none; border-bottom: 1px dotted var(--ink-3); }
+  .field .hint a:hover { color: var(--accent); border-color: var(--accent); }
+
+  .input-wrap {
+    position: relative;
+    display: flex; align-items: center;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--paper), white 40%), var(--shadow-soft);
+    transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  html[data-theme="espresso"] .input-wrap { box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), var(--shadow-soft); }
+  .input-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 82%), var(--shadow-soft);
+  }
+  .input-wrap input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    letter-spacing: -0.02em;
+  }
+  .input-wrap input::placeholder { color: var(--ink-3); opacity: 0.75; }
+  .input-icon { padding-left: 14px; color: var(--ink-3); display: inline-flex; }
+  .input-wrap .reveal {
+    background: transparent; border: 0; cursor: pointer;
+    padding: 0 14px;
+    color: var(--ink-3);
+    display: inline-flex; align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .input-wrap .reveal:hover { color: var(--ink); }
+
+  /* Error state */
+  body[data-state="error"] .field.pw .input-wrap,
+  body[data-state="error"] .field.email .input-wrap {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--danger), transparent 85%);
+    animation: shake .35s cubic-bezier(.3,.2,.2,1);
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+  }
+  .error-msg {
+    display: none;
+    align-items: center; gap: 8px;
+    margin-top: -4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--danger);
+  }
+  body[data-state="error"] .error-msg { display: inline-flex; }
+  .error-msg::before {
+    content: "";
+    width: 10px; height: 10px;
+    background: var(--danger);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+
+  /* Row for remember + forgot */
+  .row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: -2px;
+  }
+  .check {
+    display: inline-flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .check input { position: absolute; opacity: 0; pointer-events: none; }
+  .check .box {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--line);
+    border-radius: 4px;
+    background: var(--card);
+    display: grid; place-items: center;
+    transition: all .15s;
+    flex: none;
+  }
+  .check .box::after {
+    content: "";
+    width: 8px; height: 4px;
+    border-left: 2px solid var(--accent-ink);
+    border-bottom: 2px solid var(--accent-ink);
+    transform: rotate(-45deg) scale(0);
+    transition: transform .15s;
+    margin-top: -2px;
+  }
+  .check input:checked + .box {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .check input:checked + .box::after { transform: rotate(-45deg) scale(1); }
+  .check .lbl {
+    font-size: 13px; color: var(--ink-2);
+  }
+  .forgot {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--ink-3);
+  }
+  .forgot:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* Primary button */
+  .btn {
+    appearance: none;
+    border: 0;
+    padding: 16px 20px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.03em;
+    border-radius: var(--r-md);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    transition: transform .15s cubic-bezier(.2,.6,.2,1), background .2s, box-shadow .2s;
+    box-shadow: var(--shadow-raise), inset 0 1px 0 color-mix(in oklab, white, transparent 70%);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+    width: 100%;
+    margin-top: 4px;
+  }
+  .btn-primary:hover { background: color-mix(in oklab, var(--accent), black 10%); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary .arr {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: color-mix(in oklab, var(--accent-ink), transparent 85%);
+    display: grid; place-items: center;
+    transition: transform .2s;
+  }
+  .btn-primary:hover .arr { transform: translateX(3px); }
+
+  .alt {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--ink-2);
+  }
+  .alt a {
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+    transition: border-color .2s, color .2s;
+  }
+  .alt a:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Legal / meta strip */
+  .right-meta {
+    position: absolute;
+    bottom: 24px; left: 0; right: 0;
+    padding: 0 56px;
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+  }
+  @media (max-width: 960px) {
+    .right-meta { position: static; padding: 32px 0 0; flex-direction: column; gap: 10px; text-align: center; }
+    .theme-toggle { top: 20px; right: 20px; }
+  }
+
+  /* State demo bar (tweaks) */
+  .state-demo {
+    display: none;
+  }
+  body.tweaks-on .state-demo {
+    display: flex;
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px;
+    border-radius: 999px;
+    gap: 4px;
+    box-shadow: 0 20px 40px -12px rgba(0,0,0,0.4);
+  }
+  .state-demo button {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    color: color-mix(in oklab, var(--paper), transparent 40%);
+    border: 0;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .state-demo button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .state-demo button:hover:not([aria-pressed="true"]) { color: var(--paper); }
+
+  /* Fade-in */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade { animation: fadeUp .7s cubic-bezier(.2,.6,.2,1) both; }
+  .fade.d1 { animation-delay: .05s; }
+  .fade.d2 { animation-delay: .15s; }
+  .fade.d3 { animation-delay: .25s; }
+  .fade.d4 { animation-delay: .35s; }
+  .fade.d5 { animation-delay: .45s; }
+  .fade.d6 { animation-delay: .55s; }
+
+  /* Corner stamp: editorial flourish */
+  .stamp {
+    position: absolute;
+    bottom: 56px;
+    left: 56px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex; align-items: flex-end; gap: 10px;
+    max-width: 380px;
+    line-height: 1.5;
+  }
+  .stamp .seal {
+    width: 44px; height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    flex: none;
+    background: var(--card);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink-2);
+  }
+  .stamp .txt { padding-bottom: 4px; }
+  @media (max-width: 1100px) { .stamp { position: static; margin-top: 24px; } }
+</style>
+</head>
+<body data-state="default">
+
+  <!-- Theme toggle (top-right) -->
+  <div class="theme-toggle" role="group" aria-label="Tema">
+    <span class="label">Tema</span>
+    <div class="theme-dots">
+      <button class="theme-dot warm"      data-theme="warm"      aria-label="Warm"      aria-pressed="true"></button>
+      <button class="theme-dot espresso"  data-theme="espresso"  aria-label="Espresso"  aria-pressed="false"></button>
+      <button class="theme-dot swiss"     data-theme="swiss"     aria-label="Swiss"     aria-pressed="false"></button>
+      <button class="theme-dot editorial" data-theme="editorial" aria-label="Editorial" aria-pressed="false"></button>
+    </div>
+  </div>
+
+  <div class="page">
+    <!-- ============== LEFT ============== -->
+    <section class="left">
+      <header class="brand fade d1">
+        <div class="mono-a" aria-hidden="true">A</div>
+        <div class="brand-text">
+          <div class="brand-name">Aleg</div>
+          <div class="brand-loc">Karaköy · İstanbul</div>
+        </div>
+      </header>
+
+      <div class="hero">
+        <div class="eyebrow fade d2"><span class="rule"></span> Kafe işletim sistemi · B2B</div>
+        <h1 class="headline fade d3">
+          İşletmenin<br/>
+          <em>tek kumanda</em> paneli.
+        </h1>
+        <p class="subhead fade d4">
+          Masa, kasa, menü, ekip, stok ve çoklu şube — tek platformda.
+          Güne tek ekrandan başla, ay sonunda verilerle bitir.
+        </p>
+
+        <div class="stats fade d5" aria-live="polite">
+          <div class="pulse" aria-hidden="true"></div>
+          <div class="stat">
+            <div class="k">Bugün</div>
+            <div class="v" data-stat="cafes">142 kafe</div>
+          </div>
+          <div class="stat">
+            <div class="k">Siparişler</div>
+            <div class="v" data-stat="orders">3,204</div>
+          </div>
+          <div class="stat">
+            <div class="k">Ortalama hazırlık</div>
+            <div class="v" data-stat="avg">4dk 12sn</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="left-footer fade d6">
+        <div class="foot-group">
+          <div class="lang" role="group" aria-label="Dil">
+            <button data-lang="tr" aria-pressed="true">TR</button>
+            <button data-lang="en" aria-pressed="false">EN</button>
+          </div>
+          <a href="#" class="foot-link">Yardım</a>
+          <a href="#" class="foot-link">Sistem durumu</a>
+        </div>
+        <div class="version">v4.02 · build 2026.04</div>
+      </footer>
+
+      <div class="stamp" aria-hidden="true">
+        <div class="seal">A</div>
+        <div class="txt">Aleg Studio · 2026<br/>Made with patience and espresso</div>
+      </div>
+    </section>
+
+    <!-- ============== RIGHT ============== -->
+    <section class="right">
+      <div class="form-wrap">
+        <div class="form-eyebrow fade d1"><span class="tick"></span> İşletme Girişi</div>
+        <h2 class="form-title fade d2">
+          <span class="form-title-main">Tekrar <em>hoşgeldin.</em></span>
+          <span class="form-title-invite">Şifreni <em>oluştur.</em></span>
+        </h2>
+        <p class="form-sub fade d3">
+          <span class="sub-main">E-posta ve şifrenle işletme paneline gir. Oturumun güvenli,
+          bağlantın şifreli.</span>
+          <span class="sub-invite" style="display:none">
+            <b>Mira Kaptanoğlu</b> seni <b>Karaköy Şubesi</b>'ne davet etti.
+            Hesabını tamamlamak için bir şifre belirle.
+          </span>
+        </p>
+
+        <!-- State banners -->
+        <div class="invite" role="status">
+          <div class="dot"></div>
+          <div>
+            <div class="t">Davet bağlantısı · geçerli 47 saat</div>
+            <div class="m"><b>emre@karakoy.aleg</b> · rol: Şube Yöneticisi</div>
+          </div>
+        </div>
+
+        <div class="inactive" role="alert">
+          <div class="dot"></div>
+          <div>
+            <div class="t">Abonelik sona erdi</div>
+            <div class="m">Hesabın 11 Nisan'da duraklatıldı. Girişe devam etmek için
+              <a href="#">faturalandırmayı yenile</a> ya da destek ile konuş.</div>
+          </div>
+        </div>
+
+        <form autocomplete="on" novalidate>
+          <div class="field email fade d4">
+            <label for="email">E-posta
+              <span class="hint">İşletme adresin</span>
+            </label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              </span>
+              <input id="email" type="email" name="email" placeholder="emre@karakoy.aleg" value="emre@karakoy.aleg" />
+            </div>
+          </div>
+
+          <div class="field pw fade d5">
+            <label for="pw">
+              <span class="pw-label-main">Şifre</span>
+              <span class="pw-label-invite" style="display:none">Yeni şifren</span>
+              <a href="#" class="hint pw-forgot">Şifremi unuttum</a>
+            </label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              </span>
+              <input id="pw" type="password" name="password" placeholder="••••••••••" value="hatalisifre" autocomplete="current-password" />
+              <button type="button" class="reveal" aria-pressed="false">Göster</button>
+            </div>
+          </div>
+
+          <div class="error-msg" role="alert">Şifre ya da e-posta hatalı. 2 deneme hakkın kaldı.</div>
+
+          <div class="row fade d6">
+            <label class="check">
+              <input type="checkbox" checked />
+              <span class="box" aria-hidden="true"></span>
+              <span class="lbl">Beni bu cihazda hatırla</span>
+            </label>
+            <a href="#" class="forgot">Şifremi unuttum</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary fade d6">
+            <span class="btn-label">
+              <span class="btn-main">Giriş yap</span>
+              <span class="btn-invite" style="display:none">Şifremi oluştur &amp; giriş yap</span>
+            </span>
+            <span class="arr" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </button>
+
+          <div class="alt fade d6">
+            <span class="alt-main">Hesabın yok mu? <a href="#">Demo talep et</a></span>
+            <span class="alt-invite" style="display:none">
+              Yanlış kişi sensin sandın? <a href="#">Bu daveti reddet</a>
+            </span>
+          </div>
+        </form>
+      </div>
+
+      <div class="right-meta">
+        <div>Aleg Studio · panel.alegstudio.com</div>
+        <div>Gizlilik · Şartlar · Çerezler</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- State demo bar (appears in Tweaks) -->
+  <div class="state-demo" role="group" aria-label="Durum önizleme">
+    <button data-state="default"  aria-pressed="true">Varsayılan</button>
+    <button data-state="error"    aria-pressed="false">Hatalı giriş</button>
+    <button data-state="inactive" aria-pressed="false">Abonelik bitti</button>
+    <button data-state="invite"   aria-pressed="false">Davet (ilk giriş)</button>
+  </div>
+
+<script>
+  /* ================ Tweak defaults ================ */
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "theme": "warm",
+    "state": "default"
+  }/*EDITMODE-END*/;
+
+  /* ================ Theme switching ================ */
+  const themeBtns = document.querySelectorAll('.theme-dot');
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    themeBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.theme === t ? 'true' : 'false'));
+    try { localStorage.setItem('aleg.theme', t); } catch(e){}
+  }
+  themeBtns.forEach(b => b.addEventListener('click', () => {
+    setTheme(b.dataset.theme);
+    window.parent.postMessage({type: '__edit_mode_set_keys', edits: {theme: b.dataset.theme}}, '*');
+  }));
+  const savedTheme = (()=>{ try { return localStorage.getItem('aleg.theme'); } catch(e){ return null; }})() || TWEAK_DEFAULTS.theme;
+  setTheme(savedTheme);
+
+  /* ================ Language toggle ================ */
+  document.querySelectorAll('.lang button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.lang button').forEach(x => x.setAttribute('aria-pressed', x===b ? 'true' : 'false'));
+    });
+  });
+
+  /* ================ Reveal password ================ */
+  const reveal = document.querySelector('.reveal');
+  const pw = document.getElementById('pw');
+  reveal.addEventListener('click', () => {
+    const shown = pw.type === 'text';
+    pw.type = shown ? 'password' : 'text';
+    reveal.textContent = shown ? 'Göster' : 'Gizle';
+    reveal.setAttribute('aria-pressed', String(!shown));
+  });
+
+  /* ================ Rotating stats ================ */
+  const statSets = [
+    { cafes: '142 kafe',  orders: '3,204',  avg: '4dk 12sn' },
+    { cafes: '156 kafe',  orders: '3,481',  avg: '3dk 58sn' },
+    { cafes: '171 kafe',  orders: '3,702',  avg: '4dk 05sn' },
+    { cafes: '189 kafe',  orders: '3,944',  avg: '3dk 44sn' },
+    { cafes: '204 kafe',  orders: '4,128',  avg: '3dk 51sn' }
+  ];
+  let statIdx = 0;
+  setInterval(() => {
+    statIdx = (statIdx + 1) % statSets.length;
+    const set = statSets[statIdx];
+    document.querySelectorAll('.stat .v').forEach(el => {
+      const k = el.dataset.stat;
+      el.classList.add('fading');
+      setTimeout(() => {
+        el.textContent = set[k];
+        el.classList.remove('fading');
+      }, 250);
+    });
+  }, 3000);
+
+  /* ================ State demo ================ */
+  function setState(s) {
+    document.body.setAttribute('data-state', s);
+    document.querySelectorAll('.state-demo button').forEach(b =>
+      b.setAttribute('aria-pressed', b.dataset.state === s ? 'true' : 'false'));
+    // Toggle invite copy
+    const isInvite = s === 'invite';
+    document.querySelector('.sub-main').style.display = isInvite ? 'none' : '';
+    document.querySelector('.sub-invite').style.display = isInvite ? 'inline' : 'none';
+    document.querySelector('.pw-label-main').style.display = isInvite ? 'none' : '';
+    document.querySelector('.pw-label-invite').style.display = isInvite ? 'inline' : 'none';
+    document.querySelector('.pw-forgot').style.display = isInvite ? 'none' : '';
+    document.querySelector('.btn-main').style.display = isInvite ? 'none' : '';
+    document.querySelector('.btn-invite').style.display = isInvite ? 'inline' : 'none';
+    document.querySelector('.alt-main').style.display = isInvite ? 'none' : '';
+    document.querySelector('.alt-invite').style.display = isInvite ? 'inline' : 'none';
+    if (isInvite) pw.placeholder = 'En az 10 karakter, bir sembol…';
+    else pw.placeholder = '••••••••••';
+  }
+  document.querySelectorAll('.state-demo button').forEach(b =>
+    b.addEventListener('click', () => {
+      setState(b.dataset.state);
+      window.parent.postMessage({type: '__edit_mode_set_keys', edits: {state: b.dataset.state}}, '*');
+    })
+  );
+  setState(TWEAK_DEFAULTS.state);
+
+  /* ================ Tweaks / edit mode hook ================ */
+  window.addEventListener('message', (e) => {
+    const d = e.data || {};
+    if (d.type === '__activate_edit_mode') document.body.classList.add('tweaks-on');
+    if (d.type === '__deactivate_edit_mode') document.body.classList.remove('tweaks-on');
+  });
+  window.parent.postMessage({type: '__edit_mode_available'}, '*');
+
+  /* ================ Submit (demo) ================ */
+  document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    setState('error');
+    pw.focus();
+  });
+</script>
+</body>
+</html>
